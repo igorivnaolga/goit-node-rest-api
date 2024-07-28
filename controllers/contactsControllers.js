@@ -1,11 +1,46 @@
-import contactsService from "../services/contactsServices.js";
+import * as contactsServices from '../services/contactsServices.js';
 
-export const getAllContacts = (req, res) => {};
+const getAllContacts = async (req, res) => {
+  try {
+    const result = await contactsServices.listContacts();
 
-export const getOneContact = (req, res) => {};
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
-export const deleteContact = (req, res) => {};
+const getOneContact = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await contactsServices.getContactById(id);
 
-export const createContact = (req, res) => {};
+    if (!result) {
+      const error = new Error(`Movie with id=${id} not found`);
+      error.status = 404;
+      throw error;
+    }
+    res.json(result);
+  } catch (error) {
+    const { status = 500, message } = error;
+    res.status(status).json({
+      message,
+    });
+  }
+};
 
-export const updateContact = (req, res) => {};
+// const deleteContact = (req, res) => {};
+
+// const createContact = (req, res) => {};
+
+// const updateContact = (req, res) => {};
+
+export default {
+  getAllContacts,
+  getOneContact,
+  //   deleteContact,
+  //   createContact,
+  //   updateContact,
+};
