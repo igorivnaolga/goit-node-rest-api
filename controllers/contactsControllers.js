@@ -1,3 +1,4 @@
+import HttpError from '../helpers/HttpError.js';
 import * as contactsServices from '../services/contactsServices.js';
 
 const getAllContacts = async (req, res) => {
@@ -18,9 +19,7 @@ const getOneContact = async (req, res) => {
     const result = await contactsServices.getContactById(id);
 
     if (!result) {
-      const error = new Error(`Movie with id=${id} not found`);
-      error.status = 404;
-      throw error;
+      throw HttpError(404, `Movie with id=${id} not found`);
     }
     res.json(result);
   } catch (error) {
