@@ -1,19 +1,17 @@
 import HttpError from '../helpers/HttpError.js';
 import * as contactsServices from '../services/contactsServices.js';
 
-const getAllContacts = async (req, res) => {
+const getAllContacts = async (req, res, next) => {
   try {
     const result = await contactsServices.listContacts();
 
     res.json(result);
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    next(error);
   }
 };
 
-const getOneContact = async (req, res) => {
+const getOneContact = async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await contactsServices.getContactById(id);
@@ -23,10 +21,7 @@ const getOneContact = async (req, res) => {
     }
     res.json(result);
   } catch (error) {
-    const { status = 500, message } = error;
-    res.status(status).json({
-      message,
-    });
+    next(error);
   }
 };
 
