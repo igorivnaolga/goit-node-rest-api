@@ -28,6 +28,21 @@ export const addContact = async (data) => {
   return newContact;
 };
 
+export const updateById = async (id, data) => {
+  const contacts = await listContacts();
+  const index = contacts.findIndex((item) => item.id === id);
+
+  if (index === -1) {
+    return null;
+  }
+
+  contacts[index] = { ...contacts[index], ...data };
+
+  await updateContacts(contacts);
+
+  return contacts[index];
+};
+
 export const removeContact = async (id) => {
   const contacts = await listContacts();
 
