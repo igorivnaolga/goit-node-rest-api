@@ -29,7 +29,18 @@ const getOneContact = async (req, res, next) => {
   }
 };
 
-// const deleteContact = (req, res) => {};
+const deleteContact = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await contactsServices.removeContact(id);
+    if (!result) {
+      throw HttpError(404, 'Not found');
+    }
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
 const createContact = async (req, res, next) => {
   try {
@@ -46,6 +57,11 @@ const createContact = async (req, res, next) => {
 
 const updateContact = async (req, res, next) => {
   try {
+    if (Object.keys(req.body).length === 0) {
+      return res
+        .status(400)
+        .json({ message: 'Body must have at least one field' });
+    }
     const { error } = updateContactSchema.validate(req.body);
     if (error) {
       throw HttpError(400, error.message);
@@ -64,7 +80,7 @@ const updateContact = async (req, res, next) => {
 export default {
   getAllContacts,
   getOneContact,
-  //   deleteContact,
+  deleteContact,
   createContact,
   updateContact,
 };
