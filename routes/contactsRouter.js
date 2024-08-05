@@ -30,10 +30,6 @@ contactsRouter.put(
   contactsControllers.updateContact
 );
 
-contactsRouter.patch(
-  '/:id/favorite',
-  updateContactMiddleware,
-  contactsControllers.updateStatusContact
-);
+contactsRouter.patch('/:id/favorite', contactsControllers.updateStatusContact);
 
 export default contactsRouter;
