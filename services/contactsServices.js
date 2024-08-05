@@ -26,6 +26,8 @@ export const updateStatusContact = async (id, favorite) =>
     {
       where: {
         id,
+        returning: true,
+        plain: true,
       },
     }
   );
