@@ -2,7 +2,7 @@ import HttpError from '../helpers/HttpError.js';
 import * as contactsServices from '../services/contactsServices.js';
 import ctrlWrapper from '../decorators/ctrlWrapper.js';
 
-const getAllContacts = async (req, res) => {
+const getAllContacts = async (_, res) => {
   const result = await contactsServices.listContacts();
 
   res.json(result);
@@ -46,10 +46,34 @@ const updateContact = async (req, res) => {
   res.json(result);
 };
 
+const updateStatusContact = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { favorite } = req.body;
+
+    if (typeof favorite !== 'boolean') {
+      return res
+        .status(400)
+        .json({ message: 'Field "favorite" must be boolean' });
+    }
+
+    const result = await contactsServices.updateStatusContact(id, { favorite });
+
+    if (!result) {
+      return res.status(404).json({ message: 'Not found' });
+    }
+
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export default {
   getAllContacts: ctrlWrapper(getAllContacts),
   getOneContact: ctrlWrapper(getOneContact),
   deleteContact: ctrlWrapper(deleteContact),
   createContact: ctrlWrapper(createContact),
   updateContact: ctrlWrapper(updateContact),
+  updateStatusContact: ctrlWrapper(updateStatusContact),
 };
