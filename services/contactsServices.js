@@ -21,18 +21,10 @@ export const removeContact = async (id) =>
   });
 
 export const updateStatusContact = async (id, favorite) => {
-  const [numberOfAffectedRows, [updatedContact]] = await User.update(
+  await User.update(
     { favorite },
     {
       where: { id },
-      returning: true,
-      plain: true,
     }
   );
-
-  if (numberOfAffectedRows === 0) {
-    return null;
-  }
-
-  return updatedContact;
 };
