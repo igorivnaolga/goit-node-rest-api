@@ -55,7 +55,7 @@ const updateStatusContact = async (req, res) => {
       .status(400)
       .json({ message: 'Field "favorite" must be boolean' });
   }
-  const result = await contactsServices.updateStatus(id, { favorite });
+  const result = await contactsServices.updateStatus(id, favorite);
 
   if (!result) {
     throw HttpError(404, 'Not found');
