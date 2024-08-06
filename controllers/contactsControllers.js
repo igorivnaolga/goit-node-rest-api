@@ -47,26 +47,21 @@ const updateContact = async (req, res) => {
 };
 
 const updateStatusContact = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { favorite } = req.body;
+  const { id } = req.params;
+  const { favorite } = req.body;
 
-    if (typeof favorite !== 'boolean') {
-      return res
-        .status(400)
-        .json({ message: 'Field "favorite" must be boolean' });
-    }
-
-    const result = await contactsServices.updateStatusContact(id, { favorite });
-
-    if (!result) {
-      return res.status(404).json({ message: 'Not found' });
-    }
-
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  if (typeof favorite !== 'boolean') {
+    return res
+      .status(400)
+      .json({ message: 'Field "favorite" must be boolean' });
   }
+  const result = await contactsServices.updateStatus(id, { favorite });
+
+  if (!result) {
+    throw HttpError(404, 'Not found');
+  }
+
+  res.json(result);
 };
 
 export default {
