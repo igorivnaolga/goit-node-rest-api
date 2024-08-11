@@ -9,4 +9,6 @@ const authRouter = Router();
 
 authRouter.post('/register', registerMiddleware, authControllers.register);
 
+authRouter.post('/login', registerMiddleware, authControllers.login);
+
 export default authRouter;
