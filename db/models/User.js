@@ -1,7 +1,8 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../sequelize.js';
+import { emailRegexp } from '../../constants/authConstants.js';
 
-const User = sequelize.define(User, {
+const User = sequelize.define('user', {
   password: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -10,6 +11,13 @@ const User = sequelize.define(User, {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
+    validate: {
+      isEmail(value) {
+        if (!emailRegexp.test(value)) {
+          throw new Error('Email not validate');
+        }
+      },
+    },
   },
   subscription: {
     type: DataTypes.ENUM,
@@ -22,6 +30,6 @@ const User = sequelize.define(User, {
   },
 });
 
-User.sync();
+// User.sync();
 
 export default User;
