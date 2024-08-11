@@ -6,11 +6,14 @@ import {
   createContactSchema,
   updateContactSchema,
 } from '../schemas/contactsSchemas.js';
+import authenticate from '../middlewares/authenticate.js';
 
 const createContactMiddleware = validateBody(createContactSchema);
 const updateContactMiddleware = validateBody(updateContactSchema);
 
 const contactsRouter = express.Router();
+
+contactsRouter.use(authenticate);
 
 contactsRouter.get('/', contactsControllers.getAllContacts);
 
@@ -27,7 +30,7 @@ contactsRouter.post(
 contactsRouter.put(
   '/:id',
   updateContactMiddleware,
-  contactsControllers.updateContact
+  contactsControllers.updateContactById
 );
 
 contactsRouter.patch(
