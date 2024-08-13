@@ -4,10 +4,10 @@ import ctrlWrapper from '../decorators/ctrlWrapper.js';
 
 const getAllContacts = async (req, res) => {
   const { id: owner } = req.user;
-  const { page = 1, limit = 20 } = req.query;
+  // const { page = 1, limit = 20 } = req.query;
   const result = await contactsServices.listContacts(
-    { owner },
-    { page, limit }
+    { owner }
+    // { page, limit }
   );
 
   res.json(result);
@@ -26,7 +26,9 @@ const getOneContact = async (req, res) => {
 
 const deleteContact = async (req, res) => {
   const { id } = req.params;
-  const result = await contactsServices.removeContact(id);
+  const { id: owner } = req.user;
+
+  const result = await contactsServices.removeContact({ id, owner });
   if (!result) {
     throw HttpError(404, 'Not found');
   }
@@ -35,11 +37,11 @@ const deleteContact = async (req, res) => {
 
 const createContact = async (req, res) => {
   const { id: owner } = req.user;
-  const result = await contactsServices.addContact(...req.body, owner);
+  const result = await contactsServices.addContact({ ...req.body, owner });
   res.status(201).json(result);
 };
 
-const updateContactById = async (req, res) => {
+const updateContact = async (req, res) => {
   if (Object.keys(req.body).length === 0) {
     return res
       .status(400)
@@ -77,6 +79,6 @@ export default {
   getOneContact: ctrlWrapper(getOneContact),
   deleteContact: ctrlWrapper(deleteContact),
   createContact: ctrlWrapper(createContact),
-  updateContactById: ctrlWrapper(updateContactById),
+  updateContactById: ctrlWrapper(updateContact),
   updateStatusContact: ctrlWrapper(updateStatusContact),
 };
