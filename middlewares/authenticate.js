@@ -1,6 +1,8 @@
 import HttpError from '../helpers/HttpError.js';
 import jwt from 'jsonwebtoken';
 import { findUser } from '../services/authServices.js';
+const { JWT_SECRET } = process.env;
+
 const authenticate = async (req, res, next) => {
   const { authorization } = req.headers;
 
@@ -18,6 +20,11 @@ const authenticate = async (req, res, next) => {
     if (!user) {
       return next(HttpError(401, 'Not authorized'));
     }
+
+    if (!user.token || user.token !== token) {
+      return next(HttpError(401, 'Not authorized'));
+    }
+    console.log(req.user);
     req.user = user;
     next();
   } catch (error) {

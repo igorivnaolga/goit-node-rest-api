@@ -13,7 +13,7 @@ const updateContactMiddleware = validateBody(updateContactSchema);
 
 const contactsRouter = express.Router();
 
-contactsRouter.use(authenticate);
+// contactsRouter.use(authenticate);
 
 contactsRouter.get('/', contactsControllers.getAllContacts);
 
