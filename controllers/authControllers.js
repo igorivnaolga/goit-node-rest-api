@@ -6,6 +6,9 @@ import * as authServices from '../services/authServices.js';
 import HttpError from '../helpers/HttpError.js';
 import { token } from 'morgan';
 import { listContacts } from '../services/contactsServices.js';
+import path from 'node:path';
+
+const avatarsPath = path.resolve('public', 'avatars');
 
 const { JWT_SECRET } = process.env;
 
@@ -16,6 +19,7 @@ const register = async (req, res) => {
     user: {
       email: newUser.email,
       subscription: 'starter',
+      avatarURL: newUser.avatarURL,
     },
   });
 };
@@ -45,6 +49,7 @@ const login = async (req, res) => {
     user: {
       email: user.email,
       subscription: user.subscription,
+      avatarURL: user.avatarURL,
     },
   });
 };
@@ -52,7 +57,7 @@ const login = async (req, res) => {
 const logout = async (req, res) => {
   const { id } = req.user;
   await authServices.updateUser({ id }, { token: '' });
-  res.status(204);
+  res.status(204).send();
 };
 
 const getCurrent = async (req, res) => {
@@ -63,9 +68,23 @@ const getCurrent = async (req, res) => {
   });
 };
 
+const updateAvatar = async (req, res) => {
+  const { path: oldPath, filename } = req.file;
+  const newPath = path.join(avatarsPath, filename);
+
+  await await fs.rename(oldPath, newPath);
+  const { id } = req.user;
+
+  const avatarURL = path.join('public', 'avatars', filename);
+  await User.update({ avatarURL }, { where: { id } });
+
+  res.json({ avatarURL });
+};
+
 export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   logout,
   getCurrent: ctrlWrapper(getCurrent),
+  updateAvatar: ctrlWrapper(updateAvatar),
 };
