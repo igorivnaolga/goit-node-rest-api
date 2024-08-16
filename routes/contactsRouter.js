@@ -8,6 +8,8 @@ import {
 } from '../schemas/contactsSchemas.js';
 import authenticate from '../middlewares/authenticate.js';
 
+import upload from '../middlewares/upload.js';
+
 const createContactMiddleware = validateBody(createContactSchema);
 const updateContactMiddleware = validateBody(updateContactSchema);
 
@@ -23,6 +25,7 @@ contactsRouter.delete('/:id', contactsControllers.deleteContact);
 
 contactsRouter.post(
   '/',
+  upload.single('avatar'),
   createContactMiddleware,
   contactsControllers.createContact
 );

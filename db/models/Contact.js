@@ -18,12 +18,15 @@ const Contact = sequelize.define('contact', {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  avatarURL: {
+    type: DataTypes.STRING,
+  },
   owner: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
 });
 
-// Contact.sync();
+Contact.sync();
 
 export default Contact;
