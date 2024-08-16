@@ -40,14 +40,13 @@ const deleteContact = async (req, res) => {
 };
 
 const createContact = async (req, res) => {
-  const { path: oldPath, filename } = req.file;
-  const newPath = path.join(avatarsPath, filename);
-  await fs.rename(oldPath, newPath);
-  const { id: owner } = req.user;
-  const avatar = path.join('public', 'avatars', filename);
+  // const { path: oldPath, filename } = req.file;
+  // const newPath = path.join(avatarsPath, filename);
+  // await fs.rename(oldPath, newPath);
+  // const { id: owner } = req.user;
+  // const avatar = path.join('public', 'avatars', filename);
   const result = await contactsServices.addContact({
     ...req.body,
-    avatar,
     owner,
   });
   res.status(201).json(result);

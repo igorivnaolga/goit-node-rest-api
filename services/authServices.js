@@ -2,6 +2,10 @@ import bcrypt from 'bcrypt';
 
 import User from '../db/models/User.js';
 
+import path from 'node:path';
+import * as fs from 'node:fs/promises';
+import gravatar from 'gravatar';
+
 export const findUser = (query) =>
   User.findOne({
     where: query,
@@ -19,9 +23,14 @@ export const updateUser = async (query, data) => {
 
 export const register = async (data) => {
   try {
-    const { password } = data;
+    const { password, email } = data;
+    const avatarURL = gravatar.url(email);
     const hashPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({ ...data, password: hashPassword });
+    const newUser = await User.create({
+      ...data,
+      avatarURL,
+      password: hashPassword,
+    });
     return newUser;
   } catch (error) {
     if (error?.parent?.code === '23505') {
