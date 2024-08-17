@@ -72,7 +72,7 @@ const updateAvatar = async (req, res) => {
   const { path: oldPath, filename } = req.file;
   const newPath = path.join(avatarsPath, filename);
 
-  await await fs.rename(oldPath, newPath);
+  await fs.rename(oldPath, newPath);
   const { id } = req.user;
 
   const avatarURL = path.join('public', 'avatars', filename);
