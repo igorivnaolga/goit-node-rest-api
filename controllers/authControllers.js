@@ -7,6 +7,7 @@ import HttpError from '../helpers/HttpError.js';
 import { token } from 'morgan';
 import { listContacts } from '../services/contactsServices.js';
 import path from 'node:path';
+import * as fs from 'node:fs/promises';
 
 const avatarsPath = path.resolve('public', 'avatars');
 
@@ -69,16 +70,26 @@ const getCurrent = async (req, res) => {
 };
 
 const updateAvatar = async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'File not provided' });
+  }
+
   const { path: oldPath, filename } = req.file;
+
   const newPath = path.join(avatarsPath, filename);
 
   await fs.rename(oldPath, newPath);
   const { id } = req.user;
-
-  const avatarURL = path.join('public', 'avatars', filename);
-  await User.update({ avatarURL }, { where: { id } });
-
-  res.json({ avatarURL });
+  console.log('Filename:', filename);
+  const avatarURL = path.join('avatars', filename);
+  console.log('Generated avatarURL:', avatarURL);
+  const data = {
+    avatarURL,
+  };
+  const query = { id };
+  const updatedUser = await authServices.updateUser(query, data);
+  console.log('Updated avatarURL:', updatedUser.avatarURL);
+  res.json({ avatarURL: updatedUser.avatarURL });
 };
 
 export default {
