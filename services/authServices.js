@@ -11,11 +11,9 @@ export const findUser = (query) =>
 
 export const updateUser = async (query, data) => {
   const user = await findUser(query);
-  console.log('Found user:', user);
   if (!user) {
     return null;
   }
-  console.log('Data before update:', data);
   return user.update(data, {
     returning: true,
   });
@@ -25,7 +23,6 @@ export const register = async (data) => {
   try {
     const { password, email } = data;
     const avatarURL = gravatar.url(email);
-    console.log('Generated avatarURL:', avatarURL);
     const hashPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({
       ...data,

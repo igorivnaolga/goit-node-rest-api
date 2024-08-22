@@ -80,15 +80,12 @@ const updateAvatar = async (req, res) => {
 
   await fs.rename(oldPath, newPath);
   const { id } = req.user;
-  console.log('Filename:', filename);
   const avatarURL = path.join('avatars', filename);
-  console.log('Generated avatarURL:', avatarURL);
   const data = {
     avatarURL,
   };
   const query = { id };
   const updatedUser = await authServices.updateUser(query, data);
-  console.log('Updated avatarURL:', updatedUser.avatarURL);
   res.json({ avatarURL: updatedUser.avatarURL });
 };
 
