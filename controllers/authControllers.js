@@ -62,10 +62,11 @@ const logout = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-  const { email, subscription } = req.user;
+  const { email, subscription, avatarURL } = req.user;
   res.json({
     email: email,
     subscription: subscription,
+    avatarURL: avatarURL,
   });
 };
 
