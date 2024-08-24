@@ -2,8 +2,6 @@ import bcrypt from 'bcrypt';
 
 import User from '../db/models/User.js';
 
-import path from 'node:path';
-import * as fs from 'node:fs/promises';
 import gravatar from 'gravatar';
 
 export const findUser = (query) =>
